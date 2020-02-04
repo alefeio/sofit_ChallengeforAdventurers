@@ -26,6 +26,7 @@ export default class Main extends Component {
         let dtInicio = parseISO(dataInicial)
         let dtFim = parseISO(dataFinal)
         let saldo = 0.0
+        saldo.toFixed(2)
         let result = []
 
         let data = dtInicio
@@ -40,9 +41,12 @@ export default class Main extends Component {
             saldo += parseFloat(abastecido)
             saldo -= parseFloat(consumido)
 
+            let saldo2Casas = saldo.toFixed(2)
+            let saldoFloat = parseFloat(saldo2Casas)
+
             result.push({
                 date: dt,
-                value: saldo.toFixed(2)
+                value: saldoFloat
             })
 
 
@@ -110,11 +114,18 @@ export default class Main extends Component {
     sendData = async () => {
         const result = this.state.resultado
 
-        const response = await api.post('/check?id=5e333706b519d10014bc3865', {
-            result
-        })
+        try {
+            const response = await api.post('/check?id=5e333706b519d10014bc3865', {
+                result
+            })
+    
+            if(response) alert('Enviado com sucesso!')
 
-        if(response) alert('Enviado com sucesso!')
+            console.log('result: ', result)
+            
+        } catch (error) {
+            console.log('Erro: ', error)
+        }
     }
 
     render() {
@@ -130,6 +141,7 @@ export default class Main extends Component {
                         </li>
                     ))}
                 </ul>
+                {JSON.stringify(this.state.resultado)}
             </div>
         )
     }
